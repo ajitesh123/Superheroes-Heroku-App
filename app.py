@@ -1,6 +1,6 @@
 import os
-from flask import Flask
-from models import setup_db
+from flask import Flask, request, abort, jsonify
+from models import setup_db, Person
 from flask_cors import CORS
 from flask_migrate import Migrate, MigrateCommand
 
@@ -28,7 +28,12 @@ def create_app(test_config=None):
 
     @app.route('/coolkids')
     def be_cool():
-        return "Be cool, man, be coooool! You're almost a FSND grad!"
+        heroes = Person.query.all()
+        formatted_heroes = [hero.format() for hero in heroes]
+
+        return jsonify({
+            'result': formatted_heroes
+        })
 
 
 # ------------------------------------------------
